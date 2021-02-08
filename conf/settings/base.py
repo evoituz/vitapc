@@ -4,22 +4,45 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-LIBS = []
+LIBS = [
+    'rest_framework',
+    'rest_framework.authtoken',
+    'mptt',
+    'imagekit',
+    'django_celery_beat',
+    'rest_framework_swagger',
+    'corsheaders',
+]
 
 APPS = [
     'apps.main',
     'apps.users',
     'apps.products',
+    'apps.restapi'
 ]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'django.contrib.sites',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ] + LIBS + APPS
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.TokenAuthentication',
+    # ],
+    # 'DEFAULT_PAGINATION_CLASS': 'apps.restapi.pagination.CustomPagination',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -67,6 +90,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
+IMAGEKIT_CACHEFILE_DIR = ''
+
+SITE_ID = 1
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 LANGUAGE_CODE = 'ru-Ru'
 

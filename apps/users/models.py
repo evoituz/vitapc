@@ -6,11 +6,11 @@ class User(AbstractUser):
     """ Авторизация по email or phone """
 
     avatar = models.ImageField(
-        'Аватарка', upload_to='images/users/avatars/', null=True)
+        'Аватарка', upload_to='images/users/avatars/', blank=True, null=True)
     name = models.CharField(
         'Имя', max_length=250, blank=True)
     birthday = models.DateField(
-        'Дата рождения', blank=True)
+        'Дата рождения', blank=True, null=True)
     gender = models.CharField(
         'Пол', max_length=50, blank=True)
     address = models.CharField(
