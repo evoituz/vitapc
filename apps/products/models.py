@@ -33,6 +33,20 @@ class ProductTag(models.Model):
         db_table = 'product_tags'
 
 
+class Supplier(models.Model):
+    name = models.CharField(
+        'Имя поставщика', max_length=250, unique=True)
+    phone = models.CharField(
+        'Тел. номер поставщика', max_length=250, blank=True)
+    address = models.CharField(
+        'Адрес поставщика', max_length=250, blank=True)
+
+    class Meta:
+        verbose_name = 'Поставщик'
+        verbose_name_plural = 'Поставщики'
+        db_table = 'suppliers'
+
+
 class Product(models.Model):
     """ Список товаров
     :extra = {..., 'volume_name': 'Объём'} """
@@ -42,6 +56,11 @@ class Product(models.Model):
 
     tags = models.ManyToManyField(
         ProductTag, verbose_name='Теги', related_name='products', blank=True)
+    supplier = models.ForeignKey(
+        Supplier, verbose_name='Поставщик', related_name='products', on_delete=models.CASCADE, null=True, blank=True)
+
+    description = models.TextField(
+        'Описание', blank=True)
     extra = models.JSONField(
         'Доп. инф.', default=dict)
 
