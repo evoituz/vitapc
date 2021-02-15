@@ -56,3 +56,21 @@ class CartItem(models.Model):
         verbose_name = 'Корзина'
         verbose_name_plural = 'Корзины'
         db_table = 'users_cart_items'
+
+
+class DeliveryAddress(models.Model):
+    user = models.ForeignKey(
+        User, verbose_name='Пользователь', related_name='delivery_addresses', on_delete=models.CASCADE)
+    address = models.CharField(
+        'Адрес', max_length=250, blank=True)
+    lat = models.CharField(
+        'Latitude', max_length=250, blank=True)
+    long = models.CharField(
+        'Longitude', max_length=250, blank=True)
+    phone = models.CharField(
+        'Номер телефона', max_length=250, blank=True)
+
+    class Meta:
+        verbose_name = 'Адрес доставки'
+        verbose_name_plural = 'Адреса доставки'
+        db_table = 'delivery_addresses'
