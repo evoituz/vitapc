@@ -13,7 +13,7 @@ urlpatterns = [
     # user
     path('user/registration/', rest_views.UserRegistrationView.as_view()),
     path('user/registration/send_code/', rest_views.SendCodeView.as_view()),
-    # path('user/registration/send_code/', rest_views.send_code_view),
     path('user/cart/items/', rest_views.CustomerCartItemsView.as_view()),
     path('user/cart/add/', rest_views.CustomerCartItemAddView.as_view()),
+    path('user/delivery_addresses/', rest_views.UserDeliveryAddressView.as_view()),
 ]
