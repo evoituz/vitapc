@@ -15,8 +15,8 @@ class User(AbstractUser):
         'Дата рождения', blank=True, null=True)
     gender = models.CharField(
         'Пол', max_length=50, blank=True)
-    address = models.CharField(
-        'Адрес', max_length=250, blank=True)
+    city = models.CharField(
+        'Город', max_length=250, blank=True)
     phone = models.CharField(
         'Телефон', max_length=250, unique=True)
     balance = models.DecimalField(
@@ -24,6 +24,11 @@ class User(AbstractUser):
 
     phone_verified = models.BooleanField(
         'Верифицированный номер', default=False)
+
+    code = models.CharField(
+        'Код для подтверждения', max_length=10, blank=True)
+    updated_dt = models.DateTimeField(
+        'Дата и время получения кода', auto_now_add=True)
 
     USERNAME_FIELD = 'username'
     objects = UserManager()

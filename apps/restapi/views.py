@@ -1,8 +1,14 @@
-from rest_framework import generics
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework import generics, permissions, views
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
 from apps.restapi import serializers as rest_serializers
 from apps.products import models as product_models
 from apps.users import models as user_models
+from apps.users import serializers as user_serializers
+from apps.users.models import User
 
 
 class CategoryListView(generics.ListAPIView):
@@ -41,9 +47,46 @@ class CustomerCartItemsView(generics.RetrieveAPIView):
 
 
 class CustomerCartItemAddView(generics.CreateAPIView):
+    """ Добавление товара в корзину """
     serializer_class = rest_serializers.CartItemSerializer
     queryset = user_models.CartItem.objects.all()
     # http_method_names = ['POST']
 
-    def get_object(self):
-        return self.request.user
+
+class UserRegistrationView(generics.CreateAPIView):
+    serializer_class = user_serializers.UserRegistrationSerializer
+    queryset = user_models.User.objects.all()
+
+
+class SendCodeView(generics.CreateAPIView):
+    permission_classes = [permissions.AllowAny]
+    serializer_class = user_serializers.PhoneCodeSerializer
+
+    # def post(self, request, format=None):
+    #     serializer = user_serializers.PhoneCodeSerializer()
+    #     return Response({})
+
+    def get_queryset(self):
+        return self.request
+
+    def post(self, request, *args, **kwargs):
+        # print(request.data)
+        # user = self.create(request, *args, **kwargs)
+        # print(user.data)
+        phone = request.data['phone']
+        code = request.data['code']
+        user = User.objects.get(phone=phone)
+        if user.code == code:
+            user.phone_verified = True
+            user.save(update_fields=['phone_verified'])
+            token, _ = Token.objects.get_or_create(user_id=user.id)
+            print(token)
+            data = {'token': token.key}
+            return Response(data, status=201)
+        return {'ok': False}
+
+
+@csrf_exempt
+@api_view(['POST'])
+def send_code_view(request):
+    pass
