@@ -1,5 +1,5 @@
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics, permissions, views
+from rest_framework import generics, permissions, views, status
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -51,6 +51,19 @@ class CustomerCartItemAddView(generics.CreateAPIView):
     serializer_class = rest_serializers.CartItemSerializer
     queryset = user_models.CartItem.objects.all()
     # http_method_names = ['POST']
+
+    # def post(self, request, *args, **kwargs):
+    #     print(request.user)
+    #     return self.create(request, *args, **kwargs)
+
+    # def create(self, request, *args, **kwargs):
+    #     data = request.data
+    #     data['user'] = self.request.user.id
+    #     serializer = self.get_serializer(data=data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class UserRegistrationView(generics.CreateAPIView):

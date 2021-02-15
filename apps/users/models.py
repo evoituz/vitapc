@@ -42,7 +42,7 @@ class User(AbstractUser):
 
 class CartItem(models.Model):
     user = models.ForeignKey(
-        User, verbose_name='Пользователь', related_name='cart_items', on_delete=models.PROTECT)
+        User, verbose_name='Пользователь', related_name='cart_items', on_delete=models.PROTECT, null=True)
     product = models.ForeignKey(
         Product, verbose_name='Товар', related_name='carts', on_delete=models.CASCADE)
     product_price = models.ForeignKey(

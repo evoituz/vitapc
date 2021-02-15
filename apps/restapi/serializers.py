@@ -3,7 +3,7 @@ import pdb
 from rest_framework import serializers
 
 from apps.products import models as product_models
-from apps.users.models import CartItem, User
+from apps.users import models as user_models
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -87,7 +87,7 @@ class UserCartItemSerializer(serializers.ModelSerializer):
     price = serializers.SerializerMethodField()
 
     class Meta:
-        model = CartItem
+        model = user_models.CartItem
         fields = ['product', 'name', 'value', 'stock', 'price', 'quantity', 'extra']
 
     @staticmethod
@@ -120,11 +120,33 @@ class UserCartItemsSerializer(serializers.ModelSerializer):
     cart_items = UserCartItemSerializer(many=True)
 
     class Meta:
-        model = User
+        model = user_models.User
         fields = ['cart_items']
 
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CartItem
-        fields = '__all__'
+        model = user_models.CartItem
+        exclude = ['user']
+
+    def create(self, validated_data):
+        # ==== Если потребуется обновление уже имеющегося товара в корзине ====
+        # instance, created = user_models.CartItem.objects.update_or_create(
+        #     user=self.context.get('request').user,
+        #     product=validated_data.get('product'),
+        #     product_price=validated_data.get('product_price'),
+        #     defaults={
+        #         'quantity': validated_data.get('quantity'),
+        #         'extra': validated_data.get('extra')
+        #     }
+        # )
+        # =======================================================================
+        instance = user_models.CartItem.objects.create(
+            user=self.context.get('request').user,
+            product=validated_data.get('product'),
+            product_price=validated_data.get('product_price'),
+            quantity=validated_data.get('quantity'),
+            extra=validated_data.get('extra')
+        )
+        return instance
+
